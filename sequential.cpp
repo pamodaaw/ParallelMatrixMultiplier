@@ -55,18 +55,39 @@ long getElapsedTimeForMultiplying(double** matrixA, double** matrixB, int size){
 	high_resolution_clock::time_point end = high_resolution_clock::now();
 	long duration = duration_cast<milliseconds>( end - start ).count();
 	// Clears the memory
-	delete matrixA;
-	delete matrixB;
-	delete resultant;
+	free(matrixA);
+	free(matrixB);
+	free(resultant);
 
 	// Returns the elapsed time
 	return duration;
 }
 
-void multiplyTwoRandMatrices(int size){
-	double** matrixA = generateRandMatrix(size);
-	double** matrixB = generateRandMatrix(size);
-	cout << getElapsedTimeForMultiplying(matrixA, matrixB, size);
+void multiplyTwoRandMatrices(int size, int sampleSize){
+	double timeTotal = 0;
+	long elapsedTime = 0;
+    	double timesTaken[sampleSize];
+	double squareSum = 0;
+	double timeAverage;
+	double standardDeviation;
+	int i;
+	for(i=0; i <sampleSize; i++){
+		double** matrixA = generateRandMatrix(size);
+		double** matrixB = generateRandMatrix(size);
+		elapsedTime = getElapsedTimeForMultiplying(matrixA, matrixB, size);
+		timeTotal += elapsedTime ;
+		timesTaken[i] = elapsedTime;
+	}
+	
+	timeAverage = (double)(timeTotal/sampleSize );
+
+	//calculate standard deviation
+	for(i=0; i <sampleSize; i++){
+		squareSum += (timesTaken[i] - timeAverage) * (timesTaken[i] - timeAverage);
+	}
+	standardDeviation = sqrt(squareSum /sampleSize );
+	printf("Average Time Spent for sample size of %d  : %.2f milli secs\n", sampleSize, timeAverage);
+	printf("standard deviation  : %.2f milli secs\n", standardDeviation);
 }
 
 
@@ -74,7 +95,9 @@ void multiplyTwoRandMatrices(int size){
 int main(int argc, const char* argv[]) {
 	if (argc == 2){
 		int size = atoi(argv[1]);
-		multiplyTwoRandMatrices(size);
+		int sampleSize = 20;
+		multiplyTwoRandMatrices(size, sampleSize);
+
 	}
 	else
 		cout << "Invalid input value";
