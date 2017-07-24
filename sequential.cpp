@@ -79,7 +79,7 @@ void multiplyTwoRandMatrices(int size, int sampleSize){
 		timesTaken[i] = elapsedTime;
 	}
 	
-	timeAverage = (double)(timeTotal/sampleSize );
+	timeAverage = (double)(timeTotal/ (sampleSize-1) );
 
 	//calculate standard deviation
 	for(i=0; i <sampleSize; i++){
@@ -95,7 +95,7 @@ void multiplyTwoRandMatrices(int size, int sampleSize){
 int main(int argc, const char* argv[]) {
 	if (argc == 2){
 		int size = atoi(argv[1]);
-		int sampleSize = 20;
+		int sampleSize = 100;
 		multiplyTwoRandMatrices(size, sampleSize);
 
 	}
